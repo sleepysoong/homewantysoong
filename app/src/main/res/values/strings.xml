@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SleepyHack</string>
+    <string name="wallpaper_service_label">SleepyHack 배경화면</string>
+    <string name="btn_set_all">모든 배경화면 설정</string>
+    <string name="btn_set_cover">접은화면만 설정</string>
+    <string name="btn_set_main">편화면만 설정</string>
+    <string name="status_ready">준비됨</string>
+    <string name="status_setting">설정 중…</string>
+    <string name="status_done">완료!</string>
+    <string name="status_error">오류 발생</string>
+    <string name="cover_home_label">접은화면 - 홈</string>
+    <string name="cover_lock_label">접은화면 - 잠금</string>
+    <string name="main_home_label">편화면 - 홈</string>
+    <string name="main_lock_label">편화면 - 잠금</string>
+    <string name="display_date_format">%1$s\n%2$s</string>
+</resources>
