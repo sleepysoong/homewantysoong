@@ -14,7 +14,7 @@
         android:id="@+id/title_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SleepyHack"
+        android:text="@string/title_text"
         android:textColor="#FF6B35"
         android:textSize="28sp"
         android:textStyle="bold"
@@ -29,7 +29,7 @@
         android:id="@+id/subtitle_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="오늘 날짜 배경화면 생성기"
+        android:text="@string/subtitle_text"
         android:textColor="#8899AA"
         android:textSize="14sp"
         app:layout_constraintTop_toBottomOf="@id/title_text"
@@ -50,6 +50,57 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
 
+    <!-- D-day controls -->
+    <LinearLayout
+        android:id="@+id/date_controls"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="16dp"
+        android:background="#12182A"
+        app:layout_constraintTop_toBottomOf="@id/status_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            android:id="@+id/current_date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/current_date_placeholder"
+            android:textColor="#D6E2F0"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/target_date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/target_date_placeholder"
+            android:textColor="#FFB86C"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/dday_preview_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dday_placeholder"
+            android:textColor="#8BE9FD"
+            android:textSize="12sp"
+            android:layout_marginTop="6dp" />
+
+        <Button
+            android:id="@+id/btn_select_date"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="@string/btn_select_date"
+            android:textSize="12sp"
+            android:layout_marginTop="10dp" />
+    </LinearLayout>
+
     <!-- Color preview cards -->
     <LinearLayout
         android:id="@+id/preview_container"
@@ -57,7 +108,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/status_text"
+        app:layout_constraintTop_toBottomOf="@id/date_controls"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="24dp"
@@ -80,7 +131,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="접은·홈"
+                android:text="@string/preview_cover_home"
                 android:textSize="10sp"
                 android:textColor="#333" />
         </LinearLayout>
@@ -102,7 +153,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="접은·잠금"
+                android:text="@string/preview_cover_lock"
                 android:textSize="10sp"
                 android:textColor="#FFF" />
         </LinearLayout>
@@ -124,7 +175,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="편·홈"
+                android:text="@string/preview_main_home"
                 android:textSize="10sp"
                 android:textColor="#FFF" />
         </LinearLayout>
@@ -145,7 +196,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="편·잠금"
+                android:text="@string/preview_main_lock"
                 android:textSize="10sp"
                 android:textColor="#FFF" />
         </LinearLayout>
@@ -194,7 +245,7 @@
         android:id="@+id/note_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="접은 상태에서 \'접은화면\' 배경을, 펼친 상태에서 \'편화면\' 배경을 설정하세요.\n시스템이 현재 활성 디스플레이에 월페이퍼를 적용합니다."
+        android:text="@string/note_text"
         android:textColor="#667788"
         android:textSize="11sp"
         android:gravity="center"

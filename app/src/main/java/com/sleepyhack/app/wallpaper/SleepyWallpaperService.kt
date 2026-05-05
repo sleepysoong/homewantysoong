@@ -4,6 +4,7 @@ import android.graphics.Point
 import android.service.wallpaper.WallpaperService
 import android.view.SurfaceHolder
 import com.sleepyhack.app.DateImageGenerator
+import com.sleepyhack.app.TargetDateStore
 
 /**
  * Live wallpaper service that renders the date-based wallpaper in real-time.
@@ -14,6 +15,15 @@ class SleepyWallpaperService : WallpaperService() {
     override fun onCreateEngine(): Engine = SleepyWallpaperEngine()
 
     inner class SleepyWallpaperEngine : Engine() {
+
+        private data class RenderCache(
+            val width: Int,
+            val height: Int,
+            val today: java.time.LocalDate,
+            val bitmap: android.graphics.Bitmap
+        )
+
+        private var renderCache: RenderCache? = null
 
         override fun onSurfaceCreated(holder: SurfaceHolder) {
             super.onSurfaceCreated(holder)
@@ -26,6 +36,14 @@ class SleepyWallpaperService : WallpaperService() {
 
         override fun onSurfaceDestroyed(holder: SurfaceHolder) {
             super.onSurfaceDestroyed(holder)
+            clearCache()
+        }
+
+        override fun onVisibilityChanged(visible: Boolean) {
+            super.onVisibilityChanged(visible)
+            if (!visible) {
+                clearCache()
+            }
         }
 
         override fun onOffsetsChanged(
@@ -52,10 +70,22 @@ class SleepyWallpaperService : WallpaperService() {
 
         private fun drawWallpaper(holder: SurfaceHolder, width: Int, height: Int) {
             if (width <= 0 || height <= 0) return
-            val bitmap = DateImageGenerator.generate(
-                DateImageGenerator.WallpaperType.COVER_HOME,
-                width, height
-            )
+            val today = java.time.LocalDate.now()
+            val cached = renderCache
+            val bitmap = if (cached != null && cached.matches(width, height, today)) {
+                cached.bitmap
+            } else {
+                val targetDate = TargetDateStore.getTargetDate(this@SleepyWallpaperService)
+                val generated = DateImageGenerator.generate(
+                    DateImageGenerator.WallpaperType.COVER_HOME,
+                    width,
+                    height,
+                    targetDate,
+                    today
+                )
+                updateCache(width, height, today, generated)
+                generated
+            }
             try {
                 val canvas = holder.lockCanvas() ?: return
                 try {
@@ -63,10 +93,28 @@ class SleepyWallpaperService : WallpaperService() {
                 } finally {
                     holder.unlockCanvasAndPost(canvas)
                 }
-                bitmap.recycle()
             } catch (_: Exception) {
                 // Surface gone
             }
+        }
+
+        private fun RenderCache.matches(width: Int, height: Int, today: java.time.LocalDate): Boolean {
+            return this.width == width && this.height == height && this.today == today
+        }
+
+        private fun updateCache(
+            width: Int,
+            height: Int,
+            today: java.time.LocalDate,
+            bitmap: android.graphics.Bitmap
+        ) {
+            renderCache?.bitmap?.recycle()
+            renderCache = RenderCache(width, height, today, bitmap)
+        }
+
+        private fun clearCache() {
+            renderCache?.bitmap?.recycle()
+            renderCache = null
         }
     }
 }

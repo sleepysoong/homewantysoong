@@ -5,8 +5,9 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
-import java.text.SimpleDateFormat
-import java.util.Date
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.Locale
 
 /**
@@ -20,8 +21,7 @@ import java.util.Locale
  */
 object DateImageGenerator {
 
-    private val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREAN)
-    private val dayFormat = SimpleDateFormat("EEEE", Locale.KOREAN)
+    private val dateFormat = DateTimeFormatter.ofPattern("yyyy.MM.dd EEE", Locale.KOREAN)
 
     enum class WallpaperType(val bgColor: Int, val textColor: Int) {
         COVER_HOME(
@@ -46,7 +46,13 @@ object DateImageGenerator {
      * Generate a wallpaper bitmap for the given [type] and [size].
      * The bitmap fills with the background color and renders today's date centered.
      */
-    fun generate(type: WallpaperType, width: Int, height: Int): Bitmap {
+    fun generate(
+        type: WallpaperType,
+        width: Int,
+        height: Int,
+        targetDate: LocalDate,
+        today: LocalDate
+    ): Bitmap {
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
 
@@ -54,22 +60,22 @@ object DateImageGenerator {
         canvas.drawColor(type.bgColor)
 
         // Draw date text
-        val now = Date()
-        val dateText = dateFormat.format(now)
-        val dayText = dayFormat.format(now)
+        val dateText = dateFormat.format(today)
+        val ddayText = formatDdayText(today, targetDate)
 
         // Configure paints
-        val datePaint = Paint().apply {
+        val minDimension = minOf(width, height).toFloat()
+        val ddayPaint = Paint().apply {
             color = type.textColor
-            textSize = width * 0.09f
+            textSize = minDimension * 0.28f
             isAntiAlias = true
             textAlign = Paint.Align.CENTER
             typeface = Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD)
         }
 
-        val dayPaint = Paint().apply {
+        val datePaint = Paint().apply {
             color = type.textColor
-            textSize = width * 0.12f
+            textSize = minDimension * 0.08f
             isAntiAlias = true
             textAlign = Paint.Align.CENTER
             typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
@@ -79,13 +85,27 @@ object DateImageGenerator {
         // Draw centered
         val cx = width / 2f
         val cy = height / 2f
-        val lineSpacing = datePaint.textSize * 1.4f
-        val totalHeight = datePaint.textSize + lineSpacing + dayPaint.textSize
+        val lineSpacing = ddayPaint.textSize * 0.22f
+        val totalHeight = ddayPaint.textSize + lineSpacing + datePaint.textSize
         val startY = cy - totalHeight / 2f
 
-        canvas.drawText(dateText, cx, startY + datePaint.textSize, datePaint)
-        canvas.drawText(dayText, cx, startY + datePaint.textSize + lineSpacing + dayPaint.textSize, dayPaint)
+        canvas.drawText(ddayText, cx, startY + ddayPaint.textSize, ddayPaint)
+        canvas.drawText(dateText, cx, startY + ddayPaint.textSize + lineSpacing + datePaint.textSize, datePaint)
 
         return bitmap
+    }
+
+    fun formatDdayPreview(today: LocalDate, targetDate: LocalDate): String {
+        val ddayText = formatDdayText(today, targetDate)
+        return "$ddayText • ${dateFormat.format(targetDate)}"
+    }
+
+    private fun formatDdayText(today: LocalDate, targetDate: LocalDate): String {
+        val daysUntil = ChronoUnit.DAYS.between(today, targetDate)
+        return when {
+            daysUntil > 0 -> "D-$daysUntil"
+            daysUntil < 0 -> "D+${-daysUntil}"
+            else -> "D-Day"
+        }
     }
 }
