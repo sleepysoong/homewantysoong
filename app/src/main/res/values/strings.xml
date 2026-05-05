@@ -28,5 +28,6 @@
     <string name="preview_cover_lock">접은·잠금</string>
     <string name="preview_main_home">편·홈</string>
     <string name="preview_main_lock">편·잠금</string>
-    <string name="note_text">접은 상태에서 '접은화면' 배경을, 펼친 상태에서 '편화면' 배경을 설정하세요.&#10;폴더블 전용 크기는 지원하지 않으며 현재 활성 디스플레이 크기를 사용합니다.</string>
+    <string name="note_text"><![CDATA[접은 상태에서 '접은화면' 배경을, 펼친 상태에서 '편화면' 배경을 설정하세요.
+폴더블 전용 크기는 지원하지 않으며 현재 활성 디스플레이 크기를 사용합니다.]]></string>
 </resources>
